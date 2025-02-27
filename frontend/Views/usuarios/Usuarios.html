@@ -2,20 +2,52 @@
 
     function Usuarios() {
     
+        const [dataSource, setDataSource] = useState([]);
         useEffect(listarUsuarios, [])
     
-        function listarUsuarios(){
-            google.script.run.withSuccessHandler(res=>{
-                console.log(res);
-            }).listarUsuarios();
-        }
+        function listarUsuarios() {
+        google.script.run
+          .withSuccessHandler(res => {
+            const usuarios = JSON.parse(res);
+            let arreglo = [];
     
+            usuarios.map(usuario => {
+                arreglo.push({
+                  key: usuario.id,
+                  ...usuario,
     
-        return(
-            <div>Usuarios</div>
-        )
-        
+                })
+            })
+    
+            setDataSource(arreglo);
+    
+        }).listarUsuarios();
     }
+    
+    const columns = [
+        {
+          title: 'Nombre completo',
+          dataIndex: 'nombreCompleto',
+          key: 'nombreCompleto',
+        },
+        {
+          title: 'Correo',
+          dataIndex: 'correo',
+          key: 'correo',
+        },
+        {
+          title: 'Contraseña',
+          dataIndex: 'contraseña',
+          key: 'contraseña',
+        },
+    
+    ];
+    
+        return (
+            <Table dataSource={dataSource} columns={columns} />
+        )
+    }
+    
     
     
     
